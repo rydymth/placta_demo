@@ -1,9 +1,9 @@
 process.loadEnvFile()
 
-const ports = Number(process.env.PORT) || 6969;
+const port = Number(process.env.PORT) || 6969;
 
 const packs = {
-  ports
+  port
 }
 
 export default packs;
