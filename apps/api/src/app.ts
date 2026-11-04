@@ -2,9 +2,6 @@ import express, { Application } from "express"
 import { requestLogger } from "./middleware/logging.middleware.ts"
 import config from "./utils/config.ts"
 import healthRoutes from "./routes/health.routes.ts"
-import { pageSchema } from "@placta/contracts";
-
-console.info(`contracts imported: ${pageSchema}`)
 
 const app: Application = express();
 const PORT = config.port; // is a dict`
