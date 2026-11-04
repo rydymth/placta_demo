@@ -1,5 +1,5 @@
 {
-  "name": "PlactaCMS API",
+  "name": "@placta/api",
   "version": "1.0.0",
   "description": "BackendAPIs",
   "main": "dist/app.js",

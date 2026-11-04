@@ -1,0 +1,11 @@
+{
+  "name": "placta-cms",
+  "private": true,
+  "workspaces": ["apps/*", "packages/*"],
+  "scripts": {
+    "dev:api": "npm run dev -w @placta/api",
+    "dev:admin": "npm run start -w @placta/admin",
+    "dev:website": "npm run start -w @placta/website",
+    "build": "npm run build --workspaces --if-present"
+  }
+}
