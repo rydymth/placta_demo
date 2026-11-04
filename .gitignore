@@ -148,8 +148,3 @@ vite.config.ts.timestamp-*
 
 # Turbo Repo
 .turbo
-
-# Secrets
-.env
-.env.Local
-.env.example
