@@ -1,9 +1,16 @@
-process.loadEnvFile()
+import { existsSync } from "node:fs";
 
-const port = Number(process.env.PORT) || 6969;
+if (existsSync(".env")) process.loadEnvFile();
 
-const packs = {
-  port
+function required<T>(name: string): T {
+  const value = process.env[name];
+  if (!value) throw new Error("Missing required env var: " + name);
+  return value as T;
 }
 
-export default packs;
+const config = {
+  port: required<Number>("PORT") || 6969,
+  mongodbUri: required<string>("MONGODB_URI")
+}
+
+export default config

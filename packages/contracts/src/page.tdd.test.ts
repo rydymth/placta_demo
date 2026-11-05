@@ -76,28 +76,31 @@ describe("pageSchema", () => {
       {
         name: "text ok href undefined",
         text: "test1",
-        href: undefined
+        href: undefined,
+        exp: false
       },
       {
         name: "text undefined href ok",
         text: undefined,
-        href: "/test"
+        href: "/test",
+        exp: false
       },
       {
         name: "text undefined href undefined",
         text: undefined,
-        href: undefined
+        href: undefined,
+        exp: true // this case is true
       },
     ]
 
     it.each(cases)(
       "rejects $name with text: $text; href: $href",
-      ({ text, href }) => {
+      ({ text, href, exp }) => {
         const page = clone();
-        page.components[0].content.text = text;
-        page.components[0].content.href = href;
+        page.components[0].content.ctaText = text;
+        page.components[0].content.ctaHref = href;
         expect(pageSchema.safeParse(page).success)
-          .toBe(false);
+          .toBe(exp);
       }
     )
   })

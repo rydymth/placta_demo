@@ -62,3 +62,14 @@ export const pageSchema = z.strictObject({
 export type Page = z.infer<typeof pageSchema>;
 export type Seo = z.infer<typeof seoSchema>;
 
+
+
+// Pages will have their status!
+export const PAGE_STATUSES = [
+  "draft",
+  "published",
+  "unpublished"
+] as const;
+
+export const pageStatusSchema = z.enum(PAGE_STATUSES) // Created an enum here only from array
+export type PageStatus = z.infer<typeof pageStatusSchema>;

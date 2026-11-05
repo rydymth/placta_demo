@@ -1,9 +1,5 @@
 import { z } from "zod";
 
-interface expFuncs {
-  safeFun: (value: string) => boolean,
-}
-
 // avoid overcomplication!!!
 // interface schemas {
 //
@@ -32,16 +28,12 @@ const isSafeHref = (value: string): boolean => {
   }
 }
 
-export const funcs: expFuncs = {
-  safeFun: isSafeHref
-}
-
 // url schema. Will always use the safeFun to parse.
 // Function can be swapped out thanks to the object providing???
 export const hrefSchema = z
   .string()
   .max(2048)
-  .refine(funcs.safeFun,
+  .refine(isSafeHref,
     { message: "Must be a local path or https url" });
 
 // For every component
