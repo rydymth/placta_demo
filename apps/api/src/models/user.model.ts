@@ -6,6 +6,7 @@ const userDbSchema = new Schema(
     name: { type: String, required: true, trim: true },
     passwordHash: { type: String, required: true },
     role: { type: String, enum: ["admin", "editor"], default: "admin", required: true },
+    isActive: { type: Boolean, default: true, required: true },
   },
   { timestamps: true },
 );
