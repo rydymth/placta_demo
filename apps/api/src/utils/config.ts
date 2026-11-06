@@ -6,29 +6,33 @@ const env = (name: string, fallback?: string): string => {
   const value = process.env[name];
   if (value) return value;
   if (fallback !== undefined) return fallback;
-  throw new Error("Missing required env var: " + name);
+  throw new Error(`Missing required environment variable: ${name}`);
 };
 
-const int = (name: string, fallback: number): number => {
-  const n = Number.parseInt(env(name, String(fallback)), 10);
-  if (!Number.isInteger(n) || n <= 0) throw new Error(`Env var ${name} must be a positive integer`);
-  return n;
+const positiveInteger = (name: string, fallback: number): number => {
+  const value = env(name, String(fallback));
+  if (!/^\d+$/.test(value) || !Number.isSafeInteger(Number(value)) || Number(value) < 1)
+    throw new Error(`${name} must be a positive integer`);
+  return Number(value);
 };
 
-const adminOrigin = env("ADMIN_ORIGIN", "http://localhost:4200");
+const adminOrigin = env("ADMIN_ORIGIN", "http://localhost:4201");
+const port = positiveInteger("PORT", 6969);
+if (port > 65535) throw new Error("PORT must be between 1 and 65535");
 
 const config = {
   nodeEnv: env("NODE_ENV", "development"),
   isProd: env("NODE_ENV", "development") === "production",
-  port: int("PORT", 6969),
+  host: env("API_HOST", "127.0.0.1"),
+  port,
   mongodbUri: env("MONGODB_URI"),
   adminOrigin,
+  publicOrigin: env("PUBLIC_ORIGIN", "http://localhost:4200"),
   trustProxy: env("TRUST_PROXY", "false") === "true",
   rpId: env("WEBAUTHN_RP_ID", new URL(adminOrigin).hostname),
   rpName: env("WEBAUTHN_RP_NAME", "Placta CMS"),
-  accessTokenTtlSeconds: int("ACCESS_TOKEN_TTL_SECONDS", 900),
-  refreshTokenTtlDays: int("REFRESH_TOKEN_TTL_DAYS", 14),
-  // Getter so scripts that never touch auth (seed, smoke) don't need the secret.
+  accessTokenTtlSeconds: positiveInteger("ACCESS_TOKEN_TTL_SECONDS", 900),
+  refreshTokenTtlDays: positiveInteger("REFRESH_TOKEN_TTL_DAYS", 14),
   get jwtAccessSecret(): string {
     const secret = env("JWT_ACCESS_SECRET");
     if (secret.length < 32) throw new Error("JWT_ACCESS_SECRET must be at least 32 characters");
