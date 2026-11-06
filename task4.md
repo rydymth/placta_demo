@@ -217,3 +217,8 @@ Add focused automated tests for at least: draft is invisible before publish; dra
 - [ ] `npm run build:contracts && npm run build -w @placta/api` succeeds.
 
 Push when done and request a review. The next step can connect the admin UI to these endpoints and add authentication before any public deployment.
+
+
+## Next: login and passkeys
+
+After this local-only API task, complete [Task 5 — Administrator Login, Passwords and Passkeys](task5-auth.md). Password and passkey authentication are both in scope. All admin endpoints must remain local-only until backend authorization is implemented; do not expose them just because the UI has a login screen.
