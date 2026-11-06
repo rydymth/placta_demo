@@ -23,7 +23,7 @@ if (port > 65535) throw new Error("PORT must be between 1 and 65535");
 const config = {
   nodeEnv: env("NODE_ENV", "development"),
   isProd: env("NODE_ENV", "development") === "production",
-  host: env("API_HOST", "127.0.0.1"),
+  host: env("API_HOST", "localhost"),
   port,
   mongodbUri: env("MONGODB_URI"),
   adminOrigin,
