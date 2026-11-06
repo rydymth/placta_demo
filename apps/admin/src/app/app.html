@@ -24,7 +24,7 @@
       <button type="button" (click)="create()" [disabled]="busy">Create draft</button>
       <details>
         <summary>Passkeys</summary>
-        <button type="button" (click)="run(loadPasskeys.bind(this))" [disabled]="busy">Load passkeys</button>
+        <button type="button" (click)="refreshPasskeys()" [disabled]="busy">Load passkeys</button>
         <label>Password for confirmation <input type="password" autocomplete="current-password" [(ngModel)]="reauthPassword"></label>
         <label>New passkey name <input [(ngModel)]="passkeyName"></label>
         <button type="button" (click)="addPasskey()" [disabled]="busy">Add passkey</button>
