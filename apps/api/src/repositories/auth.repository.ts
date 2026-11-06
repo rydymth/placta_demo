@@ -164,8 +164,8 @@ export async function createPasskey(
   return toPasskey(doc.toObject());
 }
 
-export const touchPasskey = (id: string, counter: number) =>
-  PasskeyModel.updateOne({ _id: id }, { $set: { counter, lastUsedAt: new Date() } });
+export const touchPasskey = (id: string, oldCounter: number, counter: number) =>
+  PasskeyModel.updateOne({ _id: id, revokedAt: null, counter: oldCounter }, { $set: { counter, lastUsedAt: new Date() } });
 
 export async function revokePasskey(userId: string, id: string): Promise<boolean> {
   if (!validId(id)) return false;
