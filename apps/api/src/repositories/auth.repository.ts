@@ -56,13 +56,13 @@ const toUser = (d: any): UserRecord => ({
 export const countUsers = (): Promise<number> => UserModel.countDocuments();
 
 export async function findUserByEmail(email: string): Promise<UserRecord | null> {
-  const doc = await UserModel.findOne({ email: email.trim().toLowerCase() }).lean();
+  const doc = await UserModel.findOne({ email: email.trim().toLowerCase(), isActive: { $ne: false } }).lean();
   return doc ? toUser(doc) : null;
 }
 
 export async function findUserById(id: string): Promise<UserRecord | null> {
   if (!validId(id)) return null;
-  const doc = await UserModel.findById(id).lean();
+  const doc = await UserModel.findOne({ _id: id, isActive: { $ne: false } }).lean();
   return doc ? toUser(doc) : null;
 }
 
@@ -174,4 +174,9 @@ export async function revokePasskey(userId: string, id: string): Promise<boolean
     { $set: { revokedAt: new Date() } },
   ).lean();
   return doc !== null;
+}
+
+export async function isActiveSession(id: string, userId: string): Promise<boolean> {
+  if (!validId(id) || !validId(userId)) return false;
+  return (await RefreshTokenModel.exists({ _id: id, userId, revokedAt: null, expiresAt: { $gt: new Date() } })) !== null;
 }
