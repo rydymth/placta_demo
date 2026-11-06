@@ -39,14 +39,14 @@ const checkPassword = async (passwordHash: string | null, password: string): Pro
 
 export async function issueSession(user: UserRecord, ctx: RequestContext): Promise<Session> {
   const refreshToken = randomToken(48);
-  await repo.createRefreshToken({
+  const refreshRecord = await repo.createRefreshToken({
     userId: user.id,
     tokenHash: sha256(refreshToken),
     expiresAt: new Date(Date.now() + config.refreshTokenTtlDays * 86_400_000),
     userAgent: ctx.userAgent,
   });
   return {
-    accessToken: await signAccessToken(user.id),
+    accessToken: await signAccessToken(user.id, String(refreshRecord._id)),
     refreshToken,
     expiresIn: config.accessTokenTtlSeconds,
     user: toUserDto(user),
