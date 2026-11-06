@@ -146,7 +146,8 @@ export async function finishLogin(
     throw unauthorized("Passkey verification failed");
   }
 
-  await repo.touchPasskey(passkey.id, result.authenticationInfo.newCounter);
+  const updated = await repo.touchPasskey(passkey.id, passkey.counter, result.authenticationInfo.newCounter);
+  if (updated.matchedCount !== 1) throw unauthorized("Passkey changed, try again");
   const user = await repo.findUserById(passkey.userId);
   if (!user) throw unauthorized("Unknown user");
   recordAudit({ action: "login.passkey", userId: user.id, ...ctx });
