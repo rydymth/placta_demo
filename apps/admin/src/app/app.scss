@@ -1,0 +1,19 @@
+:host { display:block; }
+header { display:flex; align-items:center; gap:1rem; padding:1rem; background:#152038; color:#fff; }
+header strong { margin-right:auto; }
+.layout { display:grid; grid-template-columns: minmax(12rem, 17rem) minmax(18rem, 1fr) minmax(18rem, 1fr); gap:1rem; padding:1rem; }
+aside, .editor, .preview, .login { padding:1rem; border:1px solid #d5dce7; border-radius:.5rem; min-width:0; }
+.login { max-width:32rem; margin:3rem auto; }
+label { display:block; margin:.7rem 0; }
+input, textarea { display:block; width:100%; margin-top:.25rem; padding:.55rem; border:1px solid #9faabe; border-radius:.25rem; }
+textarea { min-height:6rem; }
+button { cursor:pointer; padding:.5rem .7rem; margin:.2rem; }
+button:disabled { cursor:not-allowed; }
+.page-link { display:block; width:100%; text-align:left; }
+.actions { display:flex; flex-wrap:wrap; gap:.3rem; }
+fieldset { margin:1rem 0; border:1px solid #cbd4e1; }
+.error, .notice { padding:1rem; margin:0; }
+.error { background:#ffdfdf; }
+.notice { background:#e4fae8; }
+.preview { overflow:auto; }
+@media (max-width: 1000px) { .layout { grid-template-columns:1fr; } }
