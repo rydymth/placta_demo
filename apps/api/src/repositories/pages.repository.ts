@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import type { Page, PageStatus } from "@placta/contracts";
+import { pageSchema, type Page, type PageStatus } from "@placta/contracts";
 import { PageModel } from "../models/page.model.ts";
 import { RevisionModel } from "../models/revision.model.ts";
 import { isDupeKey } from "../utils/mongo.ts";
@@ -124,7 +124,7 @@ export async function publishDraft(id: string, userId: string | null): Promise<P
   ).lean();
   if (!counted) return null;
 
-  const snapshot = current.draft as Page;
+  const snapshot = pageSchema.parse(current.draft);
   const revision = await RevisionModel.create({
     pageId: id,
     version: counted.revisionCounter,
@@ -137,7 +137,7 @@ export async function publishDraft(id: string, userId: string | null): Promise<P
   try {
     // Matching draftVersion makes sure we publish exactly what we snapshotted.
     const doc = await PageModel.findOneAndUpdate(
-      { _id: id, draftVersion: current.draftVersion },
+      { _id: id, draftVersion: current.draftVersion, status: current.status, currentPublishedRevisionId: current.currentPublishedRevisionId ?? null },
       {
         $set: {
           status: "published",
