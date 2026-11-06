@@ -54,6 +54,7 @@ export class App implements OnInit {
   async loadPages(): Promise<void> {
     this.pages = await this.api.request<PageSummaryDto[]>('GET', '/admin/pages');
   }
+  refreshPasskeys(): Promise<void> { return this.run(() => this.loadPasskeys()); }
   async loadPasskeys(): Promise<void> {
     this.passkeys = await this.api.request<PasskeyDto[]>('GET', '/admin/passkeys');
   }
