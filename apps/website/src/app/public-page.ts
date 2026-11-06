@@ -31,6 +31,12 @@ export class PublicPageComponent implements OnInit {
   error = '';
 
   ngOnInit(): void {
+    if (this.route.snapshot.routeConfig?.path === "**") {
+      this.error = "Page not found";
+      this.title.setTitle(this.error);
+      if (this.response) this.response.status = 404;
+      return;
+    }
     this.route.paramMap.pipe(
       switchMap(params => this.http.get<ApiSuccess<Page>>(`${API}/public/pages`, {
         params: { slug: params.get('slug') ?? '/' },
