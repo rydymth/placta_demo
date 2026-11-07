@@ -6,7 +6,8 @@ import { signAccessToken } from "./token.service.ts";
 import { recordAudit } from "./audit.service.ts";
 import config from "../utils/config.ts";
 import { randomToken, sha256 } from "../utils/crypto.ts";
-import { forbidden, unauthorized } from "../utils/errors.ts";
+import { conflict, forbidden, unauthorized } from "../utils/errors.ts";
+import { isDupeKey } from "../utils/mongo.ts";
 
 export interface RequestContext {
   ip: string;
@@ -64,8 +65,26 @@ export async function loginWithPassword(
     recordAudit({ action: "login.failed", ...ctx, meta: { email } });
     throw unauthorized("Invalid email or password");
   }
+
   recordAudit({ action: "login.password", userId: user.id, ...ctx });
   return issueSession(user, ctx);
+}
+
+export async function register(email: string, name: string, password: string, ctx: RequestContext): Promise<Session> {
+  try {
+    const user = await repo.createUser({
+      email: email.trim().toLowerCase(),
+      name: name.trim(),
+      passwordHash: await hashPassword(password),
+      role: "admin",
+    });
+    recordAudit({ action: "user.registered", userId: user.id, ...ctx });
+    return issueSession(user, ctx);
+  }
+  catch (err) {
+    if (isDupeKey(err)) throw conflict("An account already exists for this email", "EMAIL_TAKEN");
+    throw err;
+  }
 }
 
 // Used before sensitive actions (adding or removing a passkey).

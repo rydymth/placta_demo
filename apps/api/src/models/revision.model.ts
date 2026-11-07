@@ -1,6 +1,17 @@
-import { Schema, model } from "mongoose";
+import { type Page } from "@placta/contracts";
+import { type Types, Schema, model } from "mongoose";
 
-const revisionDbSchema = new Schema(
+interface Revision {
+  pageId: Types.ObjectId;
+  version: number;
+  title: string;
+  slug: string;
+  snapshot: Page;
+  publishedBy: Types.ObjectId | null;
+  publishedAt: Date;
+}
+
+const revisionDbSchema = new Schema<Revision>(
   {
     pageId: { type: Schema.Types.ObjectId, required: true, index: true },
     version: { type: Number, required: true },
@@ -14,4 +25,4 @@ const revisionDbSchema = new Schema(
 
 revisionDbSchema.index({ pageId: 1, version: 1 }, { unique: true });
 
-export const RevisionModel = model("PageRevision", revisionDbSchema);
+export const RevisionModel = model<Revision>("PageRevision", revisionDbSchema);

@@ -8,6 +8,7 @@ import { componentSchema } from "./components.ts";
 export const RESERVED_SLUGS = [
   "api",
   "admin",
+  "about",
   "health",
   "assets",
   "uploads",

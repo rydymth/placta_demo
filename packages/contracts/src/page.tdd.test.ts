@@ -104,4 +104,39 @@ describe("pageSchema", () => {
       }
     )
   })
+
+  describe("presentation validation", () => {
+    it("accepts a complete presentation configuration", () => {
+      const page = clone()
+      page.components[0].presentation = {
+        theme: "dark",
+        alignment: "center",
+        spacing: "spacious",
+        width: "wide",
+        animation: "fade-up",
+        animationDuration: "normal",
+        animationDelayMs: 200,
+      }
+
+      expect(pageSchema.safeParse(page).success).toBe(true)
+    })
+
+    it.each([
+      { name: "unsupported theme", presentation: { theme: "rainbow" } },
+      { name: "unsupported animation", presentation: { animation: "spin" } },
+      { name: "negative delay", presentation: { animationDelayMs: -100 } },
+      { name: "delay above the maximum", presentation: { animationDelayMs: 1100 } },
+      { name: "delay outside 100ms increments", presentation: { animationDelayMs: 150 } },
+      { name: "unknown presentation field", presentation: { customCss: "color: red" } },
+    ])("rejects $name", ({ presentation }) => {
+      const page = clone()
+      page.components[0].presentation = presentation
+
+      expect(pageSchema.safeParse(page).success).toBe(false)
+    })
+
+    it("accepts pages without presentation settings", () => {
+      expect(pageSchema.safeParse(samplePage).success).toBe(true)
+    })
+  })
 })

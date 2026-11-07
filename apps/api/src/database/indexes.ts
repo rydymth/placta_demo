@@ -5,6 +5,7 @@ import { PasskeyModel } from "../models/passkey.model.ts";
 import { RefreshTokenModel } from "../models/refresh-token.model.ts";
 import { AuthChallengeModel } from "../models/auth-challenge.model.ts";
 import { AuditLogModel } from "../models/audit-log.model.ts";
+import { EditLockModel } from "../models/edit-lock.model.ts";
 
 const models = [
   PageModel,
@@ -14,6 +15,7 @@ const models = [
   RefreshTokenModel,
   AuthChallengeModel,
   AuditLogModel,
+  EditLockModel,
 ];
 
 // Builds every declared index before the server accepts requests.

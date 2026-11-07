@@ -10,6 +10,7 @@ const loginLimiter = rateLimit({ windowMs: 15 * 60_000, max: 10 });
 const passkeyLimiter = rateLimit({ windowMs: 15 * 60_000, max: 20 });
 
 router.post("/login", requireAdminOrigin, loginLimiter, ctrl.login);
+router.post("/register", requireAdminOrigin, loginLimiter, ctrl.register);
 router.post("/refresh", requireAdminOrigin, ctrl.refresh);
 router.post("/logout", requireAdminOrigin, ctrl.logout);
 router.get("/me", authenticate, ctrl.me);

@@ -6,7 +6,73 @@ import { z } from "zod";
 // }
 
 // Functions to resolve a good url properly
-// Q: How will url scheme help resolve our pages?
+
+// section themes
+// Better way to write enums
+export const SECTION_THEMES = [
+  "default",
+  "muted",
+  "primary",
+  "dark"
+] as const;
+
+// /*
+//   * section alignments left right center
+export const SECTION_ALIGNMENTS = [
+  "left", "right", "center"
+] as const;
+
+//   * spacing compact normal spacious
+export const SECTION_SPACING = [
+  "compact", "normal", "spacious"
+] as const;
+//   * width content wide full
+export const SECTION_WIDTH = [
+  "content", "wide", "full"
+] as const;
+//   * animations none fade-in fade-up slide-right slide-left
+export const SECTION_ANIMATIONS = [
+  "fade-in", "fade-up", "slide-right", "slide-left", "none"
+] as const;
+
+//   * animation_duration fast normal slow
+export const SECTION_DURATION = [
+  "fast", "normal", "slow"
+] as const;
+
+export const sectionThemeSchema = z.enum(SECTION_THEMES);
+export const sectionAlignmentSchema = z.enum(SECTION_ALIGNMENTS);
+export const sectionSpacingSchema = z.enum(SECTION_SPACING);
+export const sectionWidthSchema = z.enum(SECTION_WIDTH);
+export const sectionAnimationSchema = z.enum(SECTION_ANIMATIONS);
+export const sectionAnimationDurationSchema = z.enum(SECTION_DURATION);
+
+//   * create sectionSchema from above
+export const sectionPresentationSchema = z
+  .strictObject({
+    theme: sectionThemeSchema.optional(),
+    alignment: sectionAlignmentSchema.optional(),
+    spacing: sectionSpacingSchema.optional(),
+    width: sectionWidthSchema.optional(),
+    animation: sectionAnimationSchema.optional(),
+    animationDuration: sectionAnimationDurationSchema.optional(),
+    // can insert delay in ms
+    animationDelayMs: z
+      .number()
+      .int()
+      .min(0)
+      .max(1000)
+      .multipleOf(100)
+      .optional()
+  });
+
+export type SectionTheme = z.infer<typeof sectionThemeSchema>;
+export type SectionAlignment = z.infer<typeof sectionAlignmentSchema>;
+export type SectionSpacing = z.infer<typeof sectionSpacingSchema>;
+export type SectionWidth = z.infer<typeof sectionWidthSchema>;
+export type SectionAnimation = z.infer<typeof sectionAnimationSchema>;
+export type SectionAnimationDuration = z.infer<typeof sectionAnimationDurationSchema>;
+export type SectionPresentation = z.infer<typeof sectionPresentationSchema>;
 
 export enum ContentType {
   hero = "hero",
@@ -69,6 +135,7 @@ export const heroSchema = z.strictObject({
   type: z.literal(ContentType.hero),
   schemaVersion: z.literal(1),
   content: heroContentSchema,
+  presentation: sectionPresentationSchema.optional()
 });
 
 // Text section
@@ -82,6 +149,7 @@ export const textSectionSchema = z.strictObject({
   type: z.literal(ContentType["text-section"]),
   schemaVersion: z.literal(1),
   content: textSectionContentSchema,
+  presentation: sectionPresentationSchema.optional()
 });
 
 export const componentSchema = z.discriminatedUnion("type", [
@@ -93,5 +161,3 @@ export type HeroComponent = z.infer<typeof heroSchema>;
 export type TextSectionComponent = z.infer<typeof textSectionSchema>;
 export type PageComponent = z.infer<typeof componentSchema>;
 export type ComponentType = PageComponent["type"];
-
-

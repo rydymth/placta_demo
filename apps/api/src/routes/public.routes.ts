@@ -5,5 +5,6 @@ const router = Router();
 
 router.get("/pages", ctrl.getPage);
 router.get("/navigation", ctrl.navigation);
+router.get("/site", ctrl.site);
 
 export default router;

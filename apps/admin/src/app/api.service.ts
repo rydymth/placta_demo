@@ -4,8 +4,7 @@ import { firstValueFrom } from 'rxjs';
 import { startAuthentication, startRegistration } from '@simplewebauthn/browser';
 import type { ApiSuccess, SessionDto, UserDto } from '@placta/contracts';
 
-// Change this to the API origin when deploying.
-const API = 'http://localhost:6969/api/v1';
+const API = '/api/v1';
 type RegistrationOptions = Parameters<typeof startRegistration>[0]['optionsJSON'];
 type AuthenticationOptions = Parameters<typeof startAuthentication>[0]['optionsJSON'];
 
@@ -46,6 +45,18 @@ export class ApiService {
 
   async login(email: string, password: string): Promise<void> {
     this.acceptSession(await this.raw<SessionDto>('POST', '/auth/login', { email, password }));
+  }
+
+  getPublicOrigin(): Promise<{ publicOrigin: string }> {
+    return this.request('GET', '/admin/site');
+  }
+
+  getPublicSite(): Promise<{ publicOrigin: string }> {
+    return this.raw('GET', '/public/site');
+  }
+
+  async register(name: string, email: string, password: string): Promise<void> {
+    this.acceptSession(await this.raw<SessionDto>('POST', '/auth/register', { name, email, password }));
   }
 
   async loginPasskey(): Promise<void> {

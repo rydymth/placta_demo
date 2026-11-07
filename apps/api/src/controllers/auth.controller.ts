@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import { loginRequestSchema } from "@placta/contracts";
+import { loginRequestSchema, registerRequestSchema } from "@placta/contracts";
 import * as authService from "../services/auth.service.ts";
 import type { RequestContext, Session } from "../services/auth.service.ts";
 import * as passkeyService from "../services/passkey.service.ts";
@@ -35,6 +35,11 @@ const sendSession = (res: Response, { refreshToken, ...session }: Session): void
 export async function login(req: Request, res: Response) {
   const { email, password } = loginRequestSchema.parse(req.body);
   sendSession(res, await authService.loginWithPassword(email, password, requestContext(req)));
+}
+
+export async function register(req: Request, res: Response) {
+  const { email, name, password } = registerRequestSchema.parse(req.body);
+  sendSession(res, await authService.register(email, name, password, requestContext(req)));
 }
 
 export async function refresh(req: Request, res: Response) {

@@ -12,6 +12,12 @@ export const loginRequestSchema = z.strictObject({
   password: passwordInput,
 });
 
+export const registerRequestSchema = z.strictObject({
+  email: emailSchema,
+  name: z.string().trim().min(1).max(100),
+  password: newPasswordSchema,
+});
+
 export const reauthRequestSchema = z.strictObject({ password: passwordInput });
 
 const flowId = z.string().min(1).max(128);
@@ -30,3 +36,4 @@ export const passkeyAuthVerifySchema = z.strictObject({
 });
 
 export type LoginRequest = z.infer<typeof loginRequestSchema>;
+export type RegisterRequest = z.infer<typeof registerRequestSchema>;
